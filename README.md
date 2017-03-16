@@ -24,7 +24,7 @@ You need to be running Kentico 9 or above for the Meta Weblog API to function.
  10. On the "Import Progress" screen, click "Finish". You can now close the Administration area.
 
 ## Setting up Open Live Writer
-Download [Open Live Writer], then follow the [instructions to set up Windows Live Writer for use with Kentico].
+Download [Open Live Writer], then follow the [instructions to set up Open Live Writer for use with Kentico].
 
 For instructions on how to publish and manage blog posts, read the following documentation:
  * [MetaWeblogAPI - Publishing first blog post]
@@ -39,9 +39,9 @@ The settings are found in the admin interface, in the Settings application under
 |----------------------------------|-----------|
 |CMS Meta Weblog Generate Summary  |Specifies whether the Meta Weblog API should automatically generate a summary for a blog article|
 |CMS Meta Weblog Summary Length    |Length of the summary to generate|
-|CMS Meta Weblog Delete Attachments|Whether blog attachments that are not used in post text or have not been uploaded via Windows Live Writer are deleted when a blog post is modified and published using Open Live Writer|
+|CMS Meta Weblog Delete Attachments|Whether blog attachments that are not used in post text or have not been uploaded via Open Live Writer are deleted when a blog post is modified and published using Open Live Writer|
 
-(for more information on these settings, see the [documentation]) 
+(for more information on these settings, see the [documentation])
 
 [Open Live Writer]: http://openlivewriter.org/
 [instructions to set up Open Live Writer for use with Kentico]: https://devnet.kentico.com/docs/7_0/devguide/index.html?metaweblog_api_registering_blog_account.htm
