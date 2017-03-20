@@ -659,7 +659,7 @@ namespace CMS.MetaWeblogProvider
                         string mediaObjName = Path.GetFileName(mediaObject.name);
 
                         // Create new attachment for file document
-                        AttachmentInfo ai = new AttachmentInfo();
+                        var ai = new DocumentAttachment();
 
                         ai.AttachmentBinary = mediaObject.bits;
                         ai.AttachmentExtension = Path.GetExtension(mediaObjName);
@@ -684,10 +684,11 @@ namespace CMS.MetaWeblogProvider
                         {
                             blogGuid[BlogNode.NodeID] = Guid.NewGuid();
                         }
-                        AttachmentInfoProvider.AddTemporaryAttachment((Guid)blogGuid[BlogNode.NodeID], null, Guid.Empty, Guid.Empty, ai, BlogNode.NodeSiteID, 0, 0, 0);
+
+                        var attachment = AttachmentInfoProvider.AddTemporaryAttachment((Guid)blogGuid[BlogNode.NodeID], null, Guid.Empty, Guid.Empty, ai, BlogNode.NodeSiteID, 0, 0, 0);
 
                         // Fill in information on newly uploaded file and return it as required
-                        mediaObj.url = SystemContext.ApplicationPath.TrimEnd('/') + DocumentHelper.GetAttachmentUrl(ai, 0).Substring(1);
+                        mediaObj.url = SystemContext.ApplicationPath.TrimEnd('/') + DocumentHelper.GetAttachmentUrl(attachment, 0).Substring(1);
                     }
                     catch (Exception ex)
                     {
@@ -743,7 +744,7 @@ namespace CMS.MetaWeblogProvider
             {
                 // Get all blogs of the current user
                 DataSet userBlogs;
-                if (User.IsGlobalAdministrator)
+                if (User.CheckPrivilegeLevel(UserPrivilegeLevelEnum.GlobalAdmin))
                 {
                     userBlogs = BlogHelper.GetBlogs(SiteName);
                 }
@@ -848,7 +849,7 @@ namespace CMS.MetaWeblogProvider
         {
             if (doc != null)
             {
-                return (doc.NodeOwner == User.UserID) || User.IsGlobalAdministrator;
+                return (doc.NodeOwner == User.UserID) || User.CheckPrivilegeLevel(UserPrivilegeLevelEnum.GlobalAdmin);
             }
             return false;
         }
@@ -1021,7 +1022,7 @@ namespace CMS.MetaWeblogProvider
             if (post != null)
             {
                 // Get parent path
-                string where = TreeProvider.GetNodesOnPathWhereCondition(post.NodeAliasPath, false, false);
+                string where = TreePathUtils.GetNodesOnPathWhereCondition(post.NodeAliasPath, false, false).ToString(true);
 
                 // Get blog nodes matching path
                 DataSet ds = DocumentHelper.GetDocuments(SiteName, "/%", post.DocumentCulture, true, "cms.blog", where, "NodeLevel DESC", -1, false, 1, TreeProvider);
@@ -1150,13 +1151,13 @@ namespace CMS.MetaWeblogProvider
                         }
 
                         // Delete unused attachment
-                        DocumentHelper.DeleteAttachment(postNode, attGuid, TreeProvider);
+                        DocumentHelper.DeleteAttachment(postNode, attGuid);
                     }
                 }
             }
             if ((blogGuid[BlogNode.NodeID] != null) && (postNode != null))
             {
-                DocumentHelper.SaveTemporaryAttachments(postNode, (Guid)blogGuid[BlogNode.NodeID], SiteName, TreeProvider);
+                DocumentHelper.SaveTemporaryAttachments(postNode, (Guid)blogGuid[BlogNode.NodeID], SiteName);
             }
         }
 
